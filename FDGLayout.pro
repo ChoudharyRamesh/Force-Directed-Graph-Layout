@@ -51,7 +51,10 @@ FORMS += \
     mainwindow.ui
 
 DISTFILES += \
-    Notes.txt
+    .gitignore \
+    LICENSE \
+    Notes.txt \
+    README.md
 
 RESOURCES += \
     Resources.qrc
