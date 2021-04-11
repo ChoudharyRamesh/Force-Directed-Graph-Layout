@@ -1,6 +1,6 @@
 # Force-Directed-Graph-Layout
 A graph plotter application based on force directed algorithm.
-![f](https://choudharyramesh.github.io/GIfs/FDGL1.gif)
+![](https://choudharyramesh.github.io/GIfs/FDGL1.gif)
 
 ![](https://choudharyramesh.github.io/GIfs/FDGL2.gif)
 
