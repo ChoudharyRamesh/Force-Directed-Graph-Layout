@@ -10,24 +10,23 @@ Copyright (c) 2021 Ramesh Choudhary
 #include "scene.h"
 #include<QFileDialog>
 
-QList<QList<bool>> demoMat ={
-    {0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0},
-    {1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0},
-    {1,1,0,0,0,0,0,0,1,0,1,0,0,0,0,0},
-    {0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0},
-    {1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0},
-    {0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
-    {0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0}
-};
+QList<QList<bool>> demoMat =
+{{0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0},
+ {0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0},
+ {1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0},
+ {1,1,0,0,0,0,0,0,1,0,1,0,0,0,0,0},
+ {0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0},
+ {1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0},
+ {0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0},
+ {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+ {0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0},
+ {0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0},
+ {0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0},
+ {0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},
+ {0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0},
+ {0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0},
+ {0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
+ {0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0}};
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -56,8 +55,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->animationSpeedSpinBox->setRange(0,50);
     ui->animationSpeedSpinBox->setValue(49);
 
-    ui->mechanicalForceSlider->setValue(200);
     ui->mechanicalForceSlider->setRange(0,6000);
+    ui->mechanicalForceSlider->setValue(500);
     ui->electricalForceSlider->setRange(0,99999999);
     ui->electricalForceSlider->setValue(1353383);
 
@@ -87,6 +86,11 @@ MainWindow::~MainWindow()
     delete graphLayout;
     delete view;
     delete ui;
+}
+
+void MainWindow::loadFromAdjacencyMatrix(QString data)
+{
+    graphLayout->loadAdjacencyMatrix(data);
 }
 
 void MainWindow::on_actionzoom_in_triggered()

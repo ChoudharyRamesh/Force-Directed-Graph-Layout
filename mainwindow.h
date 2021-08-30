@@ -21,6 +21,10 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+
+    //commandline
+    void loadFromAdjacencyMatrix(QString data);
+
 private slots:
     void on_animationSpeedSpinBox_valueChanged(int arg1);
     void on_nodeSizeSpinBox_valueChanged(int arg1);
