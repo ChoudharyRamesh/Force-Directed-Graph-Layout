@@ -24,14 +24,15 @@ public:
     GraphLayout(const QList<QList<bool>> & adjacencyMatrix,
                 Scene * scene,View * view ,QObject * parent=nullptr);
 
-    void loadAdjacencyMatrix(const QList<QList<bool>> & adjacencyMatrix);
-    void loadIncidenceMatrix(const QList<QList<int>> & incidenceMatrix);
-    void loadAdjacencyMatrix(const QString & adjacencyMatrix);
-    void loadIncidencMatrix(const QString & incidenceMatrix);
+    void loadAdjacencyMatrix(const QList<QList<bool>> & adjacencyMatrix,QStringList nodeLs);
+    void loadIncidenceMatrix(const QList<QList<int>> & incidenceMatrix,QStringList nodeLs);
+    void loadAdjacencyMatrix(const QString & adjacencyMatrix,QStringList nodeLs);
+    void loadIncidencMatrix(const QString & incidenceMatrix,QStringList nodeLs);
     QList<QList<bool>>getAdjacenyMatrix();
     QList<QList<int>> getIncidenceMatrix();
     QString getAdjacenyMatrix_AsString(bool withBracket=false);
     QString getIncidenceMatrix_AsString(bool withBracket=false);
+    QString getNodeName();
 
     void insertNode(const QPointF& point);
     void removeNode(QGraphicsNodeItem* node);

@@ -9,6 +9,7 @@ Copyright (c) 2021 Ramesh Choudhary
 #include "dialog.h"
 #include "scene.h"
 #include<QFileDialog>
+#include<QDebug>
 
 QList<QList<bool>> demoMat =
 {{0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0},
@@ -51,9 +52,8 @@ MainWindow::MainWindow(QWidget *parent) :
         graphLayout->fitInView();
     });
 
-
     ui->animationSpeedSpinBox->setRange(0,50);
-    ui->animationSpeedSpinBox->setValue(49);
+    ui->animationSpeedSpinBox->setValue(47);
 
     ui->mechanicalForceSlider->setRange(0,6000);
     ui->mechanicalForceSlider->setValue(500);
@@ -88,9 +88,10 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+//cmd
 void MainWindow::loadFromAdjacencyMatrix(QString data)
 {
-    graphLayout->loadAdjacencyMatrix(data);
+  graphLayout->loadAdjacencyMatrix(data,QStringList());
 }
 
 void MainWindow::on_actionzoom_in_triggered()
@@ -165,8 +166,9 @@ void MainWindow::on_actionLoad_From_adjacency_Matrix_triggered()
     Dialog dialog(this);
     dialog.setTitle("Load Adjacency Matrix");
     dialog.setPlaceHolderText("Type/Paste your adjacency Matrix with comma separator\ne.g :- for three node\n1,0,1\n1,0,0\n0,1,0");
+    dialog.setPlaceHolderTextForNodeList("Type/Paste your node name with newline separator\ne.g :- eg\nNode1\nNode2\nNode3");
     dialog.exec();
-    graphLayout->loadAdjacencyMatrix( dialog.getText());
+    graphLayout->loadAdjacencyMatrix( dialog.getText(),dialog.getNodeNameList());
 }
 
 
@@ -176,9 +178,9 @@ void MainWindow::on_actionLoad_From_Incidence_Matrix_triggered()
     Dialog dialog(this);
     dialog.setTitle("Load Incidence Matrix");
     dialog.setPlaceHolderText("Type/Paste your Incidence Matrix with comma separator\ne.g :- for three node\n1,0,1\n-1,0,0\n0,1,1");
+    dialog.setPlaceHolderTextForNodeList("Type/Paste your node name with newline separator\ne.g :- eg\nNode1\nNode2\nNode3");
     dialog.exec();
-    QString text = dialog.getText();
-    graphLayout->loadIncidencMatrix(dialog.getText());
+    graphLayout->loadIncidencMatrix(dialog.getText(),dialog.getNodeNameList());
 
 }
 
@@ -186,7 +188,9 @@ void MainWindow::on_actionWith_Bracket_triggered()
 {
     Dialog dialog;
     dialog.setTitle("Adjacency Matrix");
+    dialog.setReadOnly();
     dialog.setText(graphLayout->getAdjacenyMatrix_AsString(true));
+    dialog.setNodeNameText(graphLayout->getNodeName());
     dialog.exec();
 }
 
@@ -194,7 +198,9 @@ void MainWindow::on_actionWithout_Bracket_triggered()
 {
     Dialog dialog;
     dialog.setTitle("Adjacency Matrix");
+    dialog.setReadOnly();
     dialog.setText(graphLayout->getAdjacenyMatrix_AsString());
+    dialog.setNodeNameText(graphLayout->getNodeName());
     dialog.exec();
 }
 
@@ -202,7 +208,9 @@ void MainWindow::on_actionWith_Bracket_2_triggered()
 {
     Dialog dialog;
     dialog.setTitle("Incidence Matrix");
+    dialog.setReadOnly();
     dialog.setText(graphLayout->getIncidenceMatrix_AsString(true));
+    dialog.setNodeNameText(graphLayout->getNodeName());
     dialog.exec();
 }
 
@@ -211,7 +219,9 @@ void MainWindow::on_actionWithout_Bracket_2_triggered()
 {
     Dialog dialog;
     dialog.setTitle("Incidence Matrix");
+    dialog.setReadOnly();
     dialog.setText(graphLayout->getIncidenceMatrix_AsString());
+    dialog.setNodeNameText(graphLayout->getNodeName());
     dialog.exec();
 }
 
@@ -223,7 +233,7 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_actionDemo_triggered()
 {
-    graphLayout->loadAdjacencyMatrix(demoMat);
+    graphLayout->loadAdjacencyMatrix(demoMat,QStringList());
 }
 
 void MainWindow::on_actionExport_Scene_triggered()
@@ -262,6 +272,21 @@ void MainWindow::on_actionNo_Editing_triggered()
     activateEditingMode(GraphLayout::NoEditing);
 }
 
+void MainWindow::on_actionupdate_current_matrix_triggered()
+{
+    QString currentmatrix = graphLayout->getAdjacenyMatrix_AsString();
+    if(!currentmatrix.isEmpty())
+    {
+        Dialog dialog;
+        dialog.setTitle("Update current Matrix");
+        dialog.setText(currentmatrix);
+        dialog.setNodeNameText(graphLayout->getNodeName());
+        if(dialog.exec())
+            graphLayout->loadAdjacencyMatrix( dialog.getText(),dialog.getNodeNameList());
+    }
+}
+
+
 void MainWindow::activateEditingMode(GraphLayout::EditingMode mode)
 {
     ui->actionInsert_Node->setChecked(false);
@@ -278,3 +303,4 @@ void MainWindow::activateEditingMode(GraphLayout::EditingMode mode)
     case GraphLayout::NoEditing:ui->actionNo_Editing->setChecked(true); break;
     }
 }
+

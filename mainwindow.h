@@ -53,6 +53,8 @@ private slots:
     void on_actionAbout_triggered();
     void on_actionDemo_triggered();
 
+    void on_actionupdate_current_matrix_triggered();
+
 private:
     Ui::MainWindow *ui;
     Scene * scene;

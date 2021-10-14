@@ -79,6 +79,7 @@ void View::animFinished() {
     else  _numScheduledScalings++;
     sender()->~QObject();
     emit transformed();
+
 }
 
 void View::scaleView(int numSteps)

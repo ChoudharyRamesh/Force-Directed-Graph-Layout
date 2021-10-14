@@ -16,8 +16,9 @@ class QGraphicsNodeItem:public QGraphicsObject
 {
     friend QGraphicsEdgeItem;
 public:
-    QGraphicsNodeItem(QGraphicsScene * scene,QPointF pos,int radius,
-                      int NodeIndex,float * drag,int * maxSpeed,QGraphicsItem *parent = nullptr);
+    QGraphicsNodeItem(QGraphicsScene * scene, QPointF pos, int radius,
+                      int NodeIndex, float * drag, int * maxSpeed,
+                      QGraphicsItem *parent = nullptr, QString nodeName=QString());
     virtual ~QGraphicsNodeItem();
     void connectEdgeWith(QGraphicsNodeItem * node2,int edgePenWidth,bool directed=true);
     void disconnectEdgeWith(QGraphicsNodeItem * node2);
@@ -33,6 +34,7 @@ public:
     void accelerate(QVector2D acc);
     void balanceSprings();
     void updatePosition();
+    QString getNodeName();
 
    //interface
 public:
@@ -55,7 +57,12 @@ private:
     QGraphicsScene * m_scene;
     void updateConnectedEdgePositons();
     int m_zValue=2;
-};
+    QString m_nodeName;
 
+    // QGraphicsItem interface
+protected:
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
+};
 
 #endif // QGRAPHICSNODEITEM_H

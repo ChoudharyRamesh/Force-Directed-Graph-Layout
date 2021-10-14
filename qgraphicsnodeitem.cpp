@@ -7,9 +7,10 @@ Copyright (c) 2021 Ramesh Choudhary
 #include "qgraphicsedgeitem.h"
 #include "spring.h"
 #include "scene.h"
-
-QGraphicsNodeItem::QGraphicsNodeItem(QGraphicsScene * scene, QPointF pos, int radius, int NodeIndex,
-                                     float *drag, int *maxSpeed, QGraphicsItem *parent):QGraphicsObject(parent)
+#include<QDebug>
+#include<QGraphicsView>
+QGraphicsNodeItem::QGraphicsNodeItem(QGraphicsScene * scene, QPointF pos, int radius, int NodeIndex, float *drag, int *maxSpeed, QGraphicsItem *parent,
+                         QString nodeName):QGraphicsObject(parent)
 {
     this->nodeIndex=NodeIndex;
     setPos(pos); // position of item in scene coordinate
@@ -22,7 +23,11 @@ QGraphicsNodeItem::QGraphicsNodeItem(QGraphicsScene * scene, QPointF pos, int ra
     this->m_scene=scene;
     m_scene->addItem(this);
     setZValue(m_zValue);
+    if(nodeName.isEmpty())m_nodeName = QString::number(NodeIndex);
+    else m_nodeName=nodeName;
+    setAcceptHoverEvents(true);
 }
+
 
 QGraphicsNodeItem::~QGraphicsNodeItem()
 {
@@ -76,7 +81,7 @@ void QGraphicsNodeItem::connectEdgeWith(QGraphicsNodeItem * node2, int edgePenWi
 
 void QGraphicsNodeItem::disconnectEdgeWith(QGraphicsNodeItem * node2)
 { 
-     connectedEdges.value(node2).first->detachAndDelete();
+    connectedEdges.value(node2).first->detachAndDelete();
 }
 
 void QGraphicsNodeItem::connectMechanicalSpringWith(QGraphicsNodeItem *node2, float *restingLength)
@@ -128,7 +133,7 @@ void QGraphicsNodeItem::setPen(QPen pen)
 
 QPen &QGraphicsNodeItem::pen()
 {
-     prepareGeometryChange();
+    prepareGeometryChange();
     return m_pen;
 }
 
@@ -159,7 +164,7 @@ void QGraphicsNodeItem::balanceSprings()
 
 void QGraphicsNodeItem::updatePosition()
 {
-   prepareGeometryChange();
+    prepareGeometryChange();
     velocity+=acceleration;
     velocity = velocity - velocity*(*drag); // reduce velocity
     if(velocity.length() > *maxSpeed)
@@ -171,6 +176,11 @@ void QGraphicsNodeItem::updatePosition()
     pos+=velocity.toPointF();
     setPos(pos);
     acceleration=QVector2D(0,0);
+}
+
+QString QGraphicsNodeItem::getNodeName()
+{
+    return m_nodeName;
 }
 
 
@@ -189,7 +199,7 @@ void QGraphicsNodeItem::updateConnectedEdgePositons()
 void QGraphicsNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(option);
-    Q_UNUSED(widget);    
+    Q_UNUSED(widget);
     painter->setRenderHint(QPainter::Antialiasing,true);
     painter->setPen(m_pen);
     painter->setFont(font);
@@ -200,5 +210,17 @@ void QGraphicsNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem 
     painter->setPen(p);
     painter->drawText(nodeRect,Qt::AlignCenter,QString::number(nodeIndex));
     updateConnectedEdgePositons();
+}
+
+void QGraphicsNodeItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    scene()->views().first()->setToolTip(m_nodeName);
+    QGraphicsItem::hoverEnterEvent(event);
+}
+
+void QGraphicsNodeItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    scene()->views().first()->setToolTip("");
+    QGraphicsItem::hoverLeaveEvent(event);
 }
 

@@ -19,9 +19,13 @@ class Dialog : public QDialog
 public:
     explicit Dialog(QWidget *parent = nullptr);
     void setText(QString);
+    void setNodeNameText(QString);
     QString getText();
     void setPlaceHolderText(QString text);
+    void setPlaceHolderTextForNodeList(QString text);
     void setTitle(QString title);
+    QList<QString> getNodeNameList();
+    void setReadOnly();
     ~Dialog();
 
 private:

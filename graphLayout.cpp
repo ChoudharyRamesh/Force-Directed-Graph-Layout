@@ -30,7 +30,7 @@ GraphLayout::GraphLayout(const QList<QList<bool> > &adjacencyMatrix,
     this->edgePenSize=3;
     QObject::connect(&timer,&QTimer::timeout,this,&GraphLayout::balanceLayout);
     view->setGraphLayout(this);
-    loadAdjacencyMatrix(adjacencyMatrix);
+    loadAdjacencyMatrix(adjacencyMatrix,QStringList());
 }
 
 void GraphLayout::clearLayout()
@@ -43,7 +43,7 @@ void GraphLayout::clearLayout()
 }
 
 
-void GraphLayout::loadAdjacencyMatrix(const QList<QList<bool> > &adjacencyMatrix)
+void GraphLayout::loadAdjacencyMatrix(const QList<QList<bool> > &adjacencyMatrix, QStringList nodeLs)
 {
     setEditingMode(GraphLayout::NoEditing);
     clearLayout();
@@ -58,7 +58,14 @@ void GraphLayout::loadAdjacencyMatrix(const QList<QList<bool> > &adjacencyMatrix
         pen.setColor(colors.at(colorCount));
         colorCount++;
 
-        QGraphicsNodeItem * node = new QGraphicsNodeItem(scene,BounedRAND,nodeRadius,currentNodeIndexCount++,&DRAG,&maxSpeed);
+        QGraphicsNodeItem * node;
+        if(i<nodeLs.size())
+         node = new QGraphicsNodeItem(scene,BounedRAND,
+                                                         nodeRadius,currentNodeIndexCount++,
+                                                         &DRAG,
+                                                         &maxSpeed,nullptr,nodeLs.at(i));
+        else node = new QGraphicsNodeItem(scene,BounedRAND,
+                                          nodeRadius,currentNodeIndexCount++,&DRAG,&maxSpeed);
         node->setPen(pen);
         nodes.append(node);
     }
@@ -89,21 +96,21 @@ void GraphLayout::loadAdjacencyMatrix(const QList<QList<bool> > &adjacencyMatrix
     fitInView();
 }
 
-void GraphLayout::loadAdjacencyMatrix(const QString &adjacencyMatrix)
+void GraphLayout::loadAdjacencyMatrix(const QString &adjacencyMatrix, QStringList nodeLs)
 {
     if(adjacencyMatrix.isEmpty())return;
-    loadAdjacencyMatrix(adjMat_StringToNumeric(adjacencyMatrix));
+    loadAdjacencyMatrix(adjMat_StringToNumeric(adjacencyMatrix),nodeLs);
 }
 
-void GraphLayout::loadIncidenceMatrix(const QList<QList<int> > &incidenceMatrix)
+void GraphLayout::loadIncidenceMatrix(const QList<QList<int> > &incidenceMatrix, QStringList nodeLs)
 {
-    loadAdjacencyMatrix(incidenceToAdjacentMat(incidenceMatrix));
+    loadAdjacencyMatrix(incidenceToAdjacentMat(incidenceMatrix),nodeLs);
 }
 
-void GraphLayout::loadIncidencMatrix(const QString &incidenceMatrix)
+void GraphLayout::loadIncidencMatrix(const QString &incidenceMatrix, QStringList nodeLs)
 {
     if(incidenceMatrix.isEmpty())return;
-    loadAdjacencyMatrix(incidenceToAdjacentMat(inciMat_StringToNumeric(incidenceMatrix)));
+    loadAdjacencyMatrix(incidenceToAdjacentMat(inciMat_StringToNumeric(incidenceMatrix)),nodeLs);
 }
 
 void GraphLayout::insertNode(const QPointF  & point)
@@ -233,6 +240,15 @@ QString GraphLayout::getIncidenceMatrix_AsString(bool withBracket)
     }
     incidenceMatrixString.resize(incidenceMatrixString.size()-1);
     return incidenceMatrixString;
+}
+
+QString GraphLayout::getNodeName()
+{
+    QString nodeName;
+    for(int i=0;i<nodes.size();i++)
+        nodeName.append(nodes.at(i)->getNodeName()+"\n");
+
+    return nodeName;
 }
 
 void GraphLayout::setFrameInterval(int value)

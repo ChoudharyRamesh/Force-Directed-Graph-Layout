@@ -228,7 +228,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuView">
@@ -279,6 +279,7 @@
     <addaction name="actionRemove_Node"/>
     <addaction name="actionConnect_Node"/>
     <addaction name="actionDisconnect_Node"/>
+    <addaction name="actionupdate_current_matrix"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -457,6 +458,11 @@
   <action name="actionDemo">
    <property name="text">
     <string>Demo</string>
+   </property>
+  </action>
+  <action name="actionupdate_current_matrix">
+   <property name="text">
+    <string>update current matrix</string>
    </property>
   </action>
  </widget>
